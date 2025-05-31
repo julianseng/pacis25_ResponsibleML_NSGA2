@@ -6,24 +6,19 @@ This document outlines key modifications to the NSGA-II algorithm to enhance its
 
 ### 1. Modified Crowding Distance Calculation
 
-The modified crowding distance is calculated as:
+The modified crowding distance $$\text{Mod. Crowd. Dist.}_{i,d}$$ is calculated as:
 
-$$
-\text{Mod. Crowd. Dist.}_\text{i,d} = 
-\frac{1}{R} \cdot \sum_{r=1}^{R} \frac{\Delta f_{i,d,r}}{f_{\text{d,r}}^{\text{max}} - f_{\text{d,r}}^{\text{min}}}
-$$
+$$1/R \sum_{r=1}^{R} \frac{\Delta f_{i,d,r}}{f_{d,r}^{\text{max}} - f_{d,r}^{\text{min}}}$$
 
 Where:
-$$
-\Delta f_{i,d,r} = \begin{cases} 
-2 \cdot (f(2){\text{d,r}} - f(1){\text{d,r}}), & \text{if } j = 1 \text{ (smallest fitness)}  \\
-f(j+1){\text{d,r}} - f(j-1){\text{d,r}}, & \text{if } 2 \leq j \leq I-1  \\
-2 \cdot (f(I){\text{d,r}} - f(I-1){\text{d,r}}), & \text{if } j = I \text{ (largest fitness)} \end{cases}
-$$
+- If j = 1 (smallest fitness): $$\Delta f_{i,d,r} = 2 \cdot \left( f_{d,r}(2) - f_{d,r}(1) \right)$$
 
-Key improvements:
-- Calculates and averages crowding distance across all evaluations
-- Normalizes within each replicate and dimension
+- If $$2 \leq j \leq I-1$$: $$\Delta f_{i,d,r} = \left( f_{d,r}(j+1) - f_{d,r}(j-1) \right)$$
+
+- If j = I (largest fitness): $$\Delta f_{i,d,r} = 2 \cdot \left( f_{d,r}(I) - f_{d,r}(I-1) \right)$$
+
+
+In contrast to the standard crowing distance, there are several indiviual crowding distance for one parameter set due to repeated calculations as the underlying algorithms are stochastic. We normalizes within each replicate and dimension.
 
 ### 2. Extreme Solution Handling
 
@@ -35,17 +30,13 @@ Instead of assigning infinity to extreme solutions, we implement a collective vo
 ### 3. Hypercube Diversity Measure
 
 A single diversity measure for individual i is calculated as:
-$$
-\text{Hypercube}_\text{i} = \prod_{d=1}^{D}\text{Crowd. Dist.}_\text{i,d}
-$$
+$$\prod_{d=1}^{D}\text{Crowd. Dist.}_{i,d}$$
 
 ### 4. Modified Selection Operator
 
 - Based on solution ranks and hypercube diversity measure
 - Aggregates ranks from replicates using Borda count:
-$$
-\text{Borda Count}(i) := \sum_{r=1}^{R} \text{Rank}(i)_\text{r}
-$$
+$$\text{Borda Count}(i) := \sum_{r=1}^{R} \text{Rank}(i)_r$$
 - Selects solutions with larger hypercube values when ranks are equal
 
 These modifications optimize both objective values and solution diversity while effectively handling mixed parameter types and stochastic outcomes.
