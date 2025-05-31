@@ -18,26 +18,6 @@ This document describes modifications to the NSGA-2 algorithm (a heuristic optim
 The modifications ensure optimization of both objective values and solution diversity while handling mixed parameter types and stochastic outcomes.
 
 
-# Crowding Distance Pseudo Code
-
-**Input:** Population P, Number of Dimensions D, Number of Replicates R, Number of Individuals I
-
-**Output:** Crowding Distance for each individual in the population
-
-| Step | Description |
-|------|-------------|
-| 1 | For each dimension $d$ |
-| 1.1 | &nbsp;&nbsp;&nbsp;&nbsp;For each replicate $r$ |
-| 1.1.1 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sort the population by the fitness values in dimension $d$ and determine its rank j |
-| 1.1.2 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For each individual $i$ in the sorted population: |
-| 1.1.2.1 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$\text{Counter}_i^{\text{up}} := \begin{cases} + 1 & \text{if } i \text{ has best rank} \\ - 1 & \text{if } i \text{ has worst rank} \\ 0 &  \text{ else} \end{cases}$ |
-| 1.1.2.2 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$\text{Counter}_i^{\text{low}} := \begin{cases} + 1 & \text{if } i \text{ has worst rank} \\ - 1 & \text{if } i \text{ has best rank} \\ 0 &  \text{ else} \end{cases}$ |
-| 1.1.2.3 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Calculate the crowding distance for individual $i$ |
-| 1.2 | &nbsp;&nbsp;&nbsp;&nbsp;Assign $\infty$ to the individuals with the highest voting count |
-
-*Pseudo code for calculating the crowding distance in NSGA-2*
-
-
 
 The modified crowding distance is calculated as follows:
 
